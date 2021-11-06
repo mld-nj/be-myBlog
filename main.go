@@ -27,5 +27,14 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	r.GET("/tags",func(c *gin.Context) {
+		var tags []mypackage.Tag
+		db.Model(&mypackage.Cdetail{}).Select("tag","type").Find(&tags)
+		dJson,err:=json.Marshal(tags)
+		if err!=nil{
+			fmt.Println("json化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
 	r.Run()
 }

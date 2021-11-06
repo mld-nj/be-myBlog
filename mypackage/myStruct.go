@@ -12,3 +12,7 @@ type Cdetail struct {
 func (Cdetail) TableName()string{
 	return "cdetail"
 }
+type Tag struct{
+	Tag string `json:"tag"`
+	Type int64 `json:"type"`
+}
