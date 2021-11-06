@@ -7,6 +7,7 @@ type Cdetail struct {
 	Id    int64 `json:"id"`
 	Date  time.Time `json:"date"`
 	Tag   string `json:"tag"`
+	Type  int64 `json:"type"`
 }
 func (Cdetail) TableName()string{
 	return "cdetail"
