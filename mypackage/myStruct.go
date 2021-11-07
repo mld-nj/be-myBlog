@@ -18,3 +18,10 @@ type Tag struct{
 	Type int64 `json:"type"`
 	Id int64 `json:"id"`
 }
+type Passage struct{
+	Id  int64 `json:"id"`
+	Blog string `json"blog"`
+}
+func (Passage) TableName()string{
+	return "passage"
+}
