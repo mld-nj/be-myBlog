@@ -10,7 +10,24 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		method := c.Request.Method
 
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization, Token")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
+
+		//放行所有OPTIONS方法
+		if method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+		}
+		// 处理请求
+		c.Next()
+	}
+}
 func main() {
 	dsn := "root:123456@tcp(127.0.0.1:3306)/myblog?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -18,6 +35,8 @@ func main() {
 		panic(err)
 	}
 	r:=gin.Default()
+	//跨域
+	r.Use(Cors())
 	r.GET("/cardDetail",func(c *gin.Context) {
 		var Cdetails []mypackage.Cdetail
 		db.Find(&Cdetails)
@@ -36,5 +55,6 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	
 	r.Run()
 }
