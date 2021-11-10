@@ -58,22 +58,32 @@ func main() {
 	r.GET("/blog",func(c *gin.Context) {
 		var passages []mypackage.Passage
 		id:=c.DefaultQuery("id","1")
-		fmt.Println(id)
 		db.Where("id=?",id).Find(&passages)
-		// dJson,err:=json.Marshal(passages)
-		// if err!=nil{
-		// 	fmt.Println("json化错误")
-		// }
 		c.String(http.StatusOK,string(passages[0].Blog))
 	})
-	// r.GET("/blog",func(c *gin.Context) {
-	// 	var passage mypackage.Passage
-	// 	db.Where("id = ?",1).Find(passage)
-	// 	dJson,err:=json.Marshal(passage)
-	// 	if err!=nil{
-	// 		fmt.Println("json化错误")
-	// 	}
-	// 	c.JSON(http.StatusOK,string(dJson))
-	// })
+	r.GET("/passageCounts",func(c *gin.Context) {
+		var count int64
+		db.Model(&mypackage.Cdetail{}).Distinct(`id`).Count(&count)
+		num:=mypackage.Num{
+			Sum: count,
+		}
+		dJson,err:=json.Marshal(num)
+		if err!=nil{
+			fmt.Println("json格式化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
+	r.GET("/tagKinds",func(c *gin.Context) {
+		var count int64
+		db.Model(&mypackage.Cdetail{}).Distinct(`tag`).Count(&count)
+		num:=mypackage.Tagkind{
+			Total: count,
+		}
+		dJson,err:=json.Marshal(num)
+		if err!=nil{
+			fmt.Println("json格式化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
 	r.Run()
 }
