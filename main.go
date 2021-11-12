@@ -37,6 +37,7 @@ func main() {
 	r:=gin.Default()
 	//跨域
 	r.Use(Cors())
+	//获取blog的全部数据
 	r.GET("/cardDetail",func(c *gin.Context) {
 		var Cdetails []mypackage.Cdetail
 		db.Find(&Cdetails)
@@ -46,6 +47,7 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	//获取每个文章的标签
 	r.GET("/tags",func(c *gin.Context) {
 		var tags []mypackage.Tag
 		db.Model(&mypackage.Cdetail{}).Select("tag","type").Find(&tags)
@@ -55,12 +57,14 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	//获取每个card对应的blog
 	r.GET("/blog",func(c *gin.Context) {
 		var passages []mypackage.Passage
 		id:=c.DefaultQuery("id","1")
 		db.Where("id=?",id).Find(&passages)
 		c.String(http.StatusOK,string(passages[0].Blog))
 	})
+	//获取所有的文章数
 	r.GET("/passageCounts",func(c *gin.Context) {
 		var count int64
 		db.Model(&mypackage.Cdetail{}).Distinct(`id`).Count(&count)
@@ -73,6 +77,7 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	//获取所有文章中的tag种类数
 	r.GET("/tagKinds",func(c *gin.Context) {
 		var count int64
 		db.Model(&mypackage.Cdetail{}).Distinct(`tag`).Count(&count)
@@ -80,6 +85,16 @@ func main() {
 			Total: count,
 		}
 		dJson,err:=json.Marshal(num)
+		if err!=nil{
+			fmt.Println("json格式化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
+	//获取一共有多少种tag
+	r.GET("/tagName",func(c *gin.Context) {
+		var tagNames []mypackage.TagName
+		db.Model(&mypackage.Cdetail{}).Select("tag").Group("tag").Find(&tagNames)
+		dJson,err:=json.Marshal(tagNames)
 		if err!=nil{
 			fmt.Println("json格式化错误")
 		}

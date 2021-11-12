@@ -36,3 +36,7 @@ type Tagkind struct{
 	// Tag string `json:"tagName"`
 	Total     int64 `json:"total"`
 }
+type TagName struct{
+	Tag string `json:"tagName"`
+	// Total     int64 `json:"total"`
+}
