@@ -93,7 +93,7 @@ func main() {
 	//获取一共有多少种tag
 	r.GET("/tagName",func(c *gin.Context) {
 		var tagNames []mypackage.TagName
-		db.Model(&mypackage.Cdetail{}).Select("tag").Group("tag").Find(&tagNames)
+		db.Model(&mypackage.Cdetail{}).Select("tag","type").Group("tag").Find(&tagNames)
 		dJson,err:=json.Marshal(tagNames)
 		if err!=nil{
 			fmt.Println("json格式化错误")
