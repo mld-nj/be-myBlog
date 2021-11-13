@@ -61,7 +61,7 @@ func main() {
 	r.GET("/tagPas",func(c *gin.Context) {
 		var Cdetails []mypackage.Cdetail
 		tagName:=c.DefaultQuery("tagName","javaScript")
-		db.Where("tag=?",tagName).Find(&Cdetails)
+		db.Where("Tag=?",tagName).Find(&Cdetails)
 		dJson,err:=json.Marshal(Cdetails)
 		if err!=nil{
 			fmt.Println("json化错误")
@@ -108,6 +108,16 @@ func main() {
 		dJson,err:=json.Marshal(tagNames)
 		if err!=nil{
 			fmt.Println("json格式化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
+	//分页获取文章
+	r.GET("/pCardDetail",func(c *gin.Context) {
+		var Cdetails []mypackage.Cdetail
+		db.Scopes(mypackage.Paginate(c)).Find(&Cdetails)
+		dJson,err:=json.Marshal(Cdetails)
+		if err!=nil{
+			fmt.Println("json化错误")
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
