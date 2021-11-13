@@ -57,6 +57,17 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	//获取标签对应的文章
+	r.GET("/tagPas",func(c *gin.Context) {
+		var Cdetails []mypackage.Cdetail
+		tagName:=c.DefaultQuery("tagName","javaScript")
+		db.Where("tag=?",tagName).Find(&Cdetails)
+		dJson,err:=json.Marshal(Cdetails)
+		if err!=nil{
+			fmt.Println("json化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
 	//获取每个card对应的blog
 	r.GET("/blog",func(c *gin.Context) {
 		var passages []mypackage.Passage
