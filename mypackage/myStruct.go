@@ -41,3 +41,8 @@ type TagName struct{
 	Type int64 `json:"type"`
 	// Total     int64 `json:"total"`
 }
+//归档
+type Archive struct{
+	Date time.Time `json:"date"`
+	Count int64 `json:"count"`
+}

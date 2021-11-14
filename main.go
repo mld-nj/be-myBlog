@@ -121,5 +121,14 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	r.GET("/archive",func(c *gin.Context) {
+		var archives []mypackage.Archive
+		db.Raw("SELECT min(Date) as Date,count(Id) as Count from cDetail GROUP BY DATE_FORMAT(Date, '%Y-%m')").Scan(&archives)
+		dJson,err:=json.Marshal(archives)
+		if err!=nil{
+			fmt.Println("json化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
 	r.Run()
 }
