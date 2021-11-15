@@ -46,3 +46,8 @@ type Archive struct{
 	Date time.Time `json:"date"`
 	Count int64 `json:"count"`
 }
+type Friend struct{
+	Name string `json:"name"`
+	Link string `json:"link"`
+	Id   int64 `json:"id"`
+}

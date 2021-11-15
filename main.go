@@ -121,10 +121,21 @@ func main() {
 		}
 		c.JSON(http.StatusOK,string(dJson))
 	})
+	//按年月group by获取文章数量
 	r.GET("/archive",func(c *gin.Context) {
 		var archives []mypackage.Archive
 		db.Raw("SELECT min(Date) as Date,count(Id) as Count from cDetail GROUP BY DATE_FORMAT(Date, '%Y-%m')").Scan(&archives)
 		dJson,err:=json.Marshal(archives)
+		if err!=nil{
+			fmt.Println("json化错误")
+		}
+		c.JSON(http.StatusOK,string(dJson))
+	})
+	//获取友链
+	r.GET("/friends",func(c *gin.Context) {
+		var friends []mypackage.Friend
+		db.Find(&friends)
+		dJson,err:=json.Marshal(friends)
 		if err!=nil{
 			fmt.Println("json化错误")
 		}
